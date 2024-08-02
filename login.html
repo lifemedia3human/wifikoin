@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/toast.min.css">
+	<link rel="stylesheet" href="assets/css/core.css">
+	<link rel="stylesheet" href="assets/css/JuanFi.css">
+    <title>WiFi Coin Cleon Login</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<script src="assets/js/html5-qrcode.min.js" type="text/javascript"></script>
+	<script src="assets/js/config.js"></script>
+    <script src="assets/js/md5.js"></script>
+	
+<style>
+#qr-input-file {
+   opacity: 0;
+   position: absolute;
+   z-index: -1;
+}
+</style>
+</head>
+
+<body id="loginBody">
+	 $(if chap-id)
+    <form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+        <input type="hidden" name="username" />
+        <input type="hidden" name="password" />
+        <input type="hidden" name="dst" value="$(link-orig)" />
+        <input type="hidden" name="popup" value="true" />
+    </form>
+    <script>
+        var mac = "$(mac)";
+		var uIp = "$(ip)";
+        var ImOnLogin = "1";
+        var ImOnStatus = "0";
+		var alertVoucher = "0";
+		var loginError = "";
+
+        function doLogin() {
+			var vc = $("#voucherInput").val();
+			setStorageValue("activeVoucher", vc);
+			var validity = getStorageValue(vc+"validity");
+			var tempValidity = getStorageValue(vc+"tempValidity");
+			if(tempValidity != null){
+				var currentExpireDate = new Date();
+				if(validity != null){
+					currentExpireDate = new Date(parseInt(validity));
+				}
+				var minutes = parseInt(tempValidity);
+				var expireDate = new Date(currentExpireDate.getTime() + minutes*60000);
+				setStorageValue(vc+"validity", expireDate.getTime()+"");
+				removeStorageValue(vc+"tempValidity");
+			}
+            document.sendin.username.value = vc;
+			if(loginOption == 0){
+				document.sendin.password.value = hexMD5('$(chap-id)' + vc + '$(chap-challenge)');
+			}else{
+				document.sendin.password.value = hexMD5('$(chap-id)' + "" + '$(chap-challenge)');
+			}
+            document.sendin.submit();
+            return false;
+        }
+    </script>
+	
+	<script type="text/javascript" src="assets/js/md5.js"></script>
+	<script type="text/javascript">
+	<!--
+	    function doLoginMember() {
+		document.sendin.username.value = document.login.username.value;
+		document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+		document.sendin.submit();
+		return false;
+	    }
+	//-->
+	</script>
+	$(endif)
+
+	$(if error)
+	<script>
+        loginError = "$(error)";
+    </script>
+	$(endif)
+
+    <div class="container">
+        <div class="row">
+		<div class="col-sm-5">
+                <div class="row" style="margin-bottom: 10px">
+				<div class="status-holder" align="center"  style="font-size: 20px; font-weight: bold; text-shadow: 1px 1px 3px #000; color:yellow">WIFI COIN CLEON</div></div>
+				<div class="info"><center>
+						<div class="info-ip">
+						<img src="assets/img/ip.png" width="20px" height="20px" />
+						<span><font color=limegreen>$(ip)</font></span>
+						</div>
+						<div class="info-mac">
+						<img src="assets/img/mac.png" width="20px" height="20px" />
+						<span><font color=limegreen>$(mac)</font></span>
+						</div>
+					</center>
+				</div>
+				
+				<center>
+				<span class="status-disconnected"><span class="blinking1"><font size=3px>DISCONNECTED</font></span></span><br>
+                </center>
+			
+			
+				<img src="assets\img/K.jpg"  style="width: 300px; height: 100px;" alt="Gambar Karang">
+				
+			</div>
+
+            <div class="col-sm-7">
+                <div class="login">
+					<div id="vendoSelectDiv">
+						<label for="exampleFormControlSelect2">Select Vendo</label>
+						<select class="form-control" name="vendoSelected" id="vendoSelected" >
+						
+						</select>
+					</div>
+					<center>
+					<table border=0 width=100%>
+					<tr>
+						<td>
+							<div  class="outer circle mrgn">
+							<button type="button" id="insertBtn" onclick="insertBtnAction(); return false" class="btn btn-primary"  data-toggle="modal" ><font color=yellow>INSERT COIN</font></button>
+							</div>
+							
+						</td>
+					<td><center>
+						<div class="form-group">
+						<small id="voucherHelp" class="form-text text-muted" style="padding: 5px"><font color=yellow>KODE VOUCHER :</font></small>
+						<input type="voucher" class="form-control" id="voucherInput" aria-describedby="voucherHelp" placeholder="Voucher here..">
+						<button type="button" onClick="doLogin(); return false" class="btn btn-info btn-rc" style="margin-top: 20px; display: block; width: 100%; text-shadow: 0px 1px 3px #000;">CONNECT</button>
+						</div>
+						</center>
+					</td>
+					</tr>
+					</table>
+					</center>
+                    <div style="margin-bottom:-5px"></div>
+					<br>
+					<center><small id="ratesBody" style="color:white"></small></center>				
+					<!-- <button type="button" id="memberLoginBtn" class="btn btn-secondary" data-toggle="modal" data-target="#memberModal" style="display: block; width: 100%; text-shadow: 0px 1px 3px #000;">MEMBER LOGIN</button> -->
+					<div style="margin-bottom:-8px"></div>
+					<br>								
+					<div class="modal fade" id="insertCoinModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="insertCoinModalTitle" aria-hidden="true">
+					  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+						<div class="modal-content">
+						  <div class="modal-body">
+						  	<h5 class="modal-title" id="insertCoinModalTitle"><font color=yellow>Silahkan Masukan Coin</font></h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+						  	<div class="modal-footer">
+							<div class="col text-center">
+							<button type="button" id="saveVoucherButton" onclick="saveVoucherBtnAction(); return false" class="btn btn-success" data-dismiss="modal">
+							  CONNECT NOW
+							</button>
+							<!--<button type="button" id="cncl" class="btn btn-danger" data-dismiss="modal">Cancel</button> -->
+							</div>
+							</div>
+						  <div class="progress" style="margin-bottom: 10px">
+							<div id="progressDiv" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; height: 30px"></div>
+							</div>
+						  <div class="inscoin">
+								<center>
+								<div class="inscoinholder" style="border: 2px solid #746c57; padding: 5px; height: 90px; border-radius: 3px">
+								<span style="color: #8c8074">Your code is</span><br>
+								<span id="codeGeneratedBlock">
+									<span id="codeGenerated" style="font-size: 35px; font-weight: bold; color: #4cd137">*****</span>
+								</span>
+								</div>
+								
+								<div class="inscoinholder">
+								<span id="totalCoin" style="font-size: 20px; font-weight: bold; color: #fff">0</span><span style="font-size: 20px; font-weight: bold; color: #fff"> Coin</span><br>
+								<span style="color: #ffff2e">Coin</span>
+								</div>
+								
+								<div class="inscoinholder">
+								<span id="totalTime" style="font-size: 20px; font-weight: bold; color: #fff"></span><br>
+								<span style="color: #ffff2e">Time</span>
+								</div>						
+								</center>
+							</div>
+						  </div>
+						</div>
+					  </div>
+					</div>
+				<div class="modal fade" id="memberModal" role="dialog">
+					<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+						
+						<button type="button" class="close" data-dismiss="modal" style="color: #fff">&times;</button><br>        
+		  
+						</div>
+						<div class="modal-body">
+						<!-- content -->
+						<div class="memdiv">
+						<center>
+						<!-- title -->
+						<h4 class="modal-title"><span style="color: #2e86de; text-shadow: 1px 2px 3px #000">Member Login</span></h4>
+						<form name="login" action="$(link-login-only)" method="post" $(if chap-id) onSubmit="return doLoginMember()" $(endif)>
+							<input type="hidden" name="dst" value="$(link-orig)" />
+							<input type="hidden" name="popup" value="true" />
+							<span style="float: left; color: #a4b0be">Username</span><br>
+							<input name="username" type="text" value="$(username)" /><br>
+							<span style="float: left; color: #a4b0be">Password</span><br>
+							<input name="password" type="password" /><br>
+							<button class="btn btn-primary" type="submit" value="Connect" style="width: 50%">Login</button>
+						</form>
+						</center>
+		  
+						</div>
+		  
+						</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" style="color: #fff">Close</button>
+					</div>
+				</div>
+      
+				</div>
+			</div>
+
+                </div>
+				<div class="footer">
+					<span class="footers">
+					2023<br>
+					
+					</span>				
+				</div>
+            </div>	
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/popper.min.js"></script>
+			<script src="assets/js/bootstrap.min.js"></script>
+			<script src="assets/js/toast.min.js"></script>
+			<script src="assets/js/core.js"></script>
+			<script>
+				var reLogin = getStorageValue('reLogin');
+				if(reLogin == '1'){
+					setStorageValue('reLogin', '0');
+					doLogin();
+				}
+			</script>
+			<script>
+			//PROMO RATES
+			// 1 peso / 20mins#1#20#45##|5 peso / 2 hours#5#120#240##|10 peso / 4 hours#10#240#480##
+			$.ajax({
+			type: "GET",
+			url: "http://"+vendorIpAddress+"/getRates",
+			crossOrigin: true,
+			contentType: 'text/plain',
+			success: function(data){
+			//alert(data); //show format of rates
+			var rows = data.split("|");
+			var rates = "";
+			rates = rates + "<table border=1 style='width:100%';>";
+			rates = rates + "<tr>";
+			rates = rates + "<th><font color=yellow>&nbsp; Harga</font></th>";
+			rates = rates + "<th><font color=yellow>&nbsp; Paket</font></th>";
+			rates = rates + "<th><font color=yellow>&nbsp; Masa Aktif</font></th>";
+			rates = rates + "</tr>";
+			for(r in rows){
+			var columns = rows[r].split("#");
+			var totalTime = columns[2];
+			//-------Customer Time--------//
+			var days = Math.floor(totalTime / 1440);
+			var mdays = totalTime % 1440;
+			var hours = Math.floor(mdays / 60);
+			var minutes = mdays % 60;
+			var time = (days > 0 && hours == 0 && minutes == 0) ? time = days + " hari" :
+			(days > 0 && hours > 0 && minutes == 0) ? time = days + " hari " + hours + " jam" :
+			(days > 0 && hours == 0 && minutes > 0) ? time = days + " hari " + minutes + " min" :
+			(days > 0 && hours > 0 && minutes > 0) ? time = days + " hari " + hours + " jam " + minutes + " min" :
+			(days == 0 && hours > 0 && minutes == 0) ? time = hours + " jam" :
+			(days == 0 && hours > 0 && minutes > 0) ? time = hours + " jam " + minutes + " min" : time = minutes + " min"
+			//-------Customer Validity--------//
+			var totalValid = columns[3];
+			var vdays = Math.floor(totalValid / 1440);
+			var vmdays = totalValid % 1440;
+			var vhours = Math.floor(vmdays / 60);
+			var vminutes = vmdays % 60;
+			var vtime = (vdays > 0 && vhours == 0 && vminutes == 0) ? vtime = vdays + " hari" :
+			(vdays > 0 && vhours > 0 && vminutes == 0) ? vtime = vdays + " hari " + vhours + " jam" :
+			(vdays > 0 && vhours == 0 && vminutes > 0) ? vtime = vdays + " hari " + vminutes + " min" :
+			(vdays > 0 && vhours > 0 && vminutes > 0) ? vtime = vdays + " hari " + vhours + " jam " + vminutes + " min" :
+			(vdays == 0 && vhours > 0 && vminutes == 0) ? vtime = vhours + " jam" :
+			(vdays == 0 && vhours > 0 && vminutes > 0) ? vtime = vhours + " jam " + vminutes + " min" : vtime = vminutes + " min"
+			rates = rates + "<tr>";
+			rates = rates + "<td>" + "&nbsp;Rp. " + columns[1] + ".000" + "</td>";
+			rates = rates + "<td>" + "&nbsp;" + time + "</td>";
+			rates = rates + "<td>" + "&nbsp;" + vtime+ "</td>";
+			rates = rates + "</tr>";
+			}
+			rates = rates + "</table>"
+			$("#ratesBody").html(rates);
+			}
+			});
+			</script>			
+			<script src="overlay.js"></script>
+			<script>
+			function off() {
+			document.getElementById("overlay").style.display = "none";
+			}
+
+			const html5QrCode = new Html5Qrcode(/* element id */ "reader");
+			// File based scanning
+			const fileinput = document.getElementById('qr-input-file');
+			fileinput.addEventListener('change', e => {
+			if (e.target.files.length == 0) {
+				// No file selected, ignore 
+				return;
+			}
+
+			const imageFile = e.target.files[0];
+			// Scan QR Code
+			html5QrCode.scanFile(imageFile, true)
+			.then(decodedText => {
+				// success, use decodedText
+				$("#voucherInput").val(decodedText);
+				$("#scanQrModal").modal('hide');
+				fileinput.value = '';
+				html5QrCode.clear();
+			})
+			.catch(err => {
+				// failure, handle it.
+				alert('Scanned failed, please try again');
+				fileinput.value = '';
+				html5QrCode.clear();
+			});
+			});
+			</script>
+			
+			<div id="loaderDiv" class="spinner hidden">
+				<center>
+					<img src="assets/loading.svg" />
+				</center>
+			</div>
+	</div>	
+
+</div>	
+</div>
+</div>
+</body>
+
+</html>
